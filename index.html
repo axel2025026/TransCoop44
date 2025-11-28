@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TransCoope | Transcripción Musical Inteligente</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="loading">
+    <!-- Loading optimizado -->
+    <div id="loading-screen" class="loading-screen">
+        <div class="loading-content">
+            <div class="loading-animation">
+                <div class="music-wave">
+                    <div class="wave-bar"></div>
+                    <div class="wave-bar"></div>
+                    <div class="wave-bar"></div>
+                    <div class="wave-bar"></div>
+                    <div class="wave-bar"></div>
+                </div>
+                <div class="loading-logo">
+                    <div class="logo-icon">
+                        <i class="fas fa-music"></i>
+                    </div>
+                    <h1>TransCoope</h1>
+                </div>
+            </div>
+            <div class="loading-status">
+                <div class="status-message" id="status-message">Cargando recursos esenciales...</div>
+                <div class="progress-container">
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="progress-fill"></div>
+                    </div>
+                    <div class="progress-text" id="progress-text">0%</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Application -->
+    <div id="app" class="app hidden">
+        <!-- Navigation -->
+        <nav class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <div class="app-logo">
+                    <i class="fas fa-music"></i>
+                    <span>TransCoope</span>
+                </div>
+                <button class="sidebar-toggle" id="sidebar-toggle">
+                    <i class="fas fa-bars"></i>
+                </button>
+            </div>
+
+            <div class="sidebar-content">
+                <!-- User Profile -->
+                <div class="user-profile">
+                    <div class="user-avatar" id="user-avatar">
+                        <img id="avatar-img" src="" alt="Avatar" style="display: none;">
+                        <i class="fas fa-user" id="avatar-fallback"></i>
+                    </div>
+                    <div class="user-info">
+                        <h4 id="username">Usuario</h4>
+                        <span class="user-role" id="user-role">Músico</span>
+                    </div>
+                </div>
+
+                <!-- Navigation Menu -->
+                <ul class="nav-menu">
+                    <li class="nav-item active" data-section="dashboard">
+                        <a href="#dashboard" class="nav-link">
+                            <i class="fas fa-home"></i>
+                            <span class="nav-text">Inicio</span>
+                        </a>
+                    </li>
+                    <li class="nav-item" data-section="transcribe">
+                        <a href="#transcribe" class="nav-link">
+                            <i class="fas fa-wave-square"></i>
+                            <span class="nav-text">Transcribir</span>
+                        </a>
+                    </li>
+                    <li class="nav-item" data-section="library">
+                        <a href="#library" class="nav-link">
+                            <i class="fas fa-folder"></i>
+                            <span class="nav-text">Mi Biblioteca</span>
+                            <span class="nav-badge" id="library-count">0</span>
+                        </a>
+                    </li>
+                    <li class="nav-item" data-section="community">
+                        <a href="#community" class="nav-link">
+                            <i class="fas fa-users"></i>
+                            <span class="nav-text">Comunidad</span>
+                            <span class="nav-badge" id="community-notifications">3</span>
+                        </a>
+                    </li>
+                    <li class="nav-item" data-section="projects">
+                        <a href="#projects" class="nav-link">
+                            <i class="fas fa-project-diagram"></i>
+                            <span class="nav-text">Proyectos</span>
+                        </a>
+                    </li>
+                    <li class="nav-item" data-section="trending">
+                        <a href="#trending" class="nav-link">
+                            <i class="fas fa-chart-line"></i>
+                            <span class="nav-text">Tendencias</span>
+                        </a>
+                    </li>
+                </ul>
+
+                <!-- Quick Stats -->
+                <div class="sidebar-stats">
+                    <div class="stat-item">
+                        <i class="fas fa-music"></i>
+                        <div class="stat-info">
+                            <span class="stat-number" id="sidebar-transcriptions">0</span>
+                            <span class="stat-label">Transcripciones</span>
+                        </div>
+                    </div>
+                    <div class="stat-item">
+                        <i class="fas fa-cloud-upload-alt"></i>
+                        <div class="stat-info">
+                            <span class="stat-number" id="sidebar-projects">0</span>
+                            <span class="stat-label">Proyectos</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Top Header -->
+            <header class="top-header">
+                <div class="header-left">
+                    <div class="search-container">
+                        <i class="fas fa-search search-icon"></i>
+                        <input type="text" class="search-input" id="global-search" 
+                               placeholder="Buscar canciones, proyectos, usuarios...">
+                        <div class="search-shortcut">⌘K</div>
+                    </div>
+                </div>
+
+                <div class="header-right">
+                    <!-- Quick Actions -->
+                    <div class="quick-actions">
+                        <button class="header-btn" id="new-transcription-btn" title="Nueva transcripción">
+                            <i class="fas fa-plus"></i>
+                            <span>Transcribir</span>
+                        </button>
+                        <button class="header-btn" id="upload-btn" title="Subir archivo">
+                            <i class="fas fa-upload"></i>
+                        </button>
+                    </div>
+
+                    <!-- Notifications -->
+                    <div class="notifications">
+                        <button class="header-btn notification-btn" id="notifications-btn">
+                            <i class="fas fa-bell"></i>
+                            <span class="notification-badge" id="notification-count">3</span>
+                        </button>
+                    </div>
+
+                    <!-- User Menu -->
+                    <div class="user-menu">
+                        <button class="user-profile-btn" id="user-menu-btn">
+                            <div class="user-avatar small">
+                                <img id="header-avatar-img" src="" alt="" style="display: none;">
+                                <i class="fas fa-user" id="header-avatar-fallback"></i>
+                            </div>
+                            <span class="username" id="header-username">Usuario</span>
+                            <i class="fas fa-chevron-down"></i>
+                        </button>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Content Area -->
+            <div class="content-area">
+                <!-- Dashboard Section -->
+                <section id="dashboard-section" class="content-section active">
+                    <div class="section-header">
+                        <div class="welcome-message">
+                            <h1>Bienvenido, <span id="greeting-name">Músico</span>! <span class="welcome-emoji">🎵</span></h1>
+                            <p class="section-subtitle">Tu centro creativo para transcripción musical inteligente</p>
+                        </div>
+                        <div class="date-display">
+                            <span id="current-date"></span>
+                        </div>
+                    </div>
+
+                    <!-- Dashboard Grid -->
+                    <div class="dashboard-grid">
+                        <!-- Quick Actions Card -->
+                        <div class="dashboard-card quick-actions-card">
+                            <div class="card-header">
+                                <h3>Acciones Rápidas</h3>
+                                <p>Comienza una nueva sesión creativa</p>
+                            </div>
+                            <div class="actions-grid">
+                                <button class="action-card" data-action="transcribe" id="quick-transcribe">
+                                    <div class="action-icon">
+                                        <i class="fas fa-wave-square"></i>
+                                    </div>
+                                    <div class="action-content">
+                                        <h4>Transcribir Audio</h4>
+                                        <p>Convierte audio en partituras</p>
+                                    </div>
+                                    <i class="fas fa-arrow-right action-arrow"></i>
+                                </button>
+
+                                <button class="action-card" data-action="project" id="quick-project">
+                                    <div class="action-icon">
+                                        <i class="fas fa-project-diagram"></i>
+                                    </div>
+                                    <div class="action-content">
+                                        <h4>Nuevo Proyecto</h4>
+                                        <p>Crea y organiza tu música</p>
+                                    </div>
+                                    <i class="fas fa-arrow-right action-arrow"></i>
+                                </button>
+
+                                <button class="action-card" data-action="library" id="quick-library">
+                                    <div class="action-icon">
+                                        <i class="fas fa-folder"></i>
+                                    </div>
+                                    <div class="action-content">
+                                        <h4>Mi Biblioteca</h4>
+                                        <p>Gestiona tus archivos</p>
+                                    </div>
+                                    <i class="fas fa-arrow-right action-arrow"></i>
+                                </button>
+
+                                <button class="action-card" data-action="collaborate" id="quick-collab">
+                                    <div class="action-icon">
+                                        <i class="fas fa-users"></i>
+                                    </div>
+                                    <div class="action-content">
+                                        <h4>Colaborar</h4>
+                                        <p>Trabaja con otros músicos</p>
+                                    </div>
+                                    <i class="fas fa-arrow-right action-arrow"></i>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Statistics Card -->
+                        <div class="dashboard-card stats-card">
+                            <div class="card-header">
+                                <h3>Tus Estadísticas</h3>
+                                <p>Resumen de tu actividad</p>
+                            </div>
+                            <div class="stats-grid">
+                                <div class="stat-card">
+                                    <div class="stat-icon success">
+                                        <i class="fas fa-music"></i>
+                                    </div>
+                                    <div class="stat-content">
+                                        <div class="stat-number" id="stat-transcriptions">0</div>
+                                        <div class="stat-label">Transcripciones</div>
+                                        <div class="stat-trend positive">
+                                            <i class="fas fa-arrow-up"></i>
+                                            <span>12% este mes</span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="stat-card">
+                                    <div class="stat-icon primary">
+                                        <i class="fas fa-project-diagram"></i>
+                                    </div>
+                                    <div class="stat-content">
+                                        <div class="stat-number" id="stat-projects">0</div>
+                                        <div class="stat-label">Proyectos</div>
+                                        <div class="stat-trend positive">
+                                            <i class="fas fa-arrow-up"></i>
+                                            <span>8% este mes</span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="stat-card">
+                                    <div class="stat-icon accent">
+                                        <i class="fas fa-download"></i>
+                                    </div>
+                                    <div class="stat-content">
+                                        <div class="stat-number" id="stat-downloads">0</div>
+                                        <div class="stat-label">Descargas</div>
+                                        <div class="stat-trend positive">
+                                            <i class="fas fa-arrow-up"></i>
+                                            <span>15% este mes</span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="stat-card">
+                                    <div class="stat-icon warning">
+                                        <i class="fas fa-users"></i>
+                                    </div>
+                                    <div class="stat-content">
+                                        <div class="stat-number" id="stat-collaborations">0</div>
+                                        <div class="stat-label">Colaboraciones</div>
+                                        <div class="stat-trend neutral">
+                                            <i class="fas fa-minus"></i>
+                                            <span>Estable</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Recent Activity -->
+                        <div class="dashboard-card activity-card">
+                            <div class="card-header">
+                                <h3>Actividad Reciente</h3>
+                                <button class="view-all-btn" id="view-activity-btn">Ver todo</button>
+                            </div>
+                            <div class="activity-list" id="recent-activity">
+                                <!-- Activity items loaded dynamically -->
+                                <div class="activity-empty">
+                                    <i class="fas fa-music"></i>
+                                    <p>Tu actividad aparecerá aquí</p>
+                                    <button class="btn-outline" id="start-activity-btn">Comenzar a transcribir</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Quick Transcription -->
+                        <div class="dashboard-card upload-card">
+                            <div class="card-header">
+                                <h3>Transcripción Rápida</h3>
+                                <p>Comienza en segundos</p>
+                            </div>
+                            <div class="upload-interface">
+                                <div class="upload-methods">
+                                    <div class="upload-method active" data-method="file">
+                                        <i class="fas fa-file-audio"></i>
+                                        <span>Archivo</span>
+                                    </div>
+                                    <div class="upload-method" data-method="link">
+                                        <i class="fas fa-link"></i>
+                                        <span>Enlace</span>
+                                    </div>
+                                    <div class="upload-method" data-method="record">
+                                        <i class="fas fa-microphone"></i>
+                                        <span>Grabar</span>
+                                    </div>
+                                </div>
+
+                                <div class="upload-area" id="quick-upload-area">
+                                    <div class="upload-placeholder">
+                                        <i class="fas fa-cloud-upload-alt"></i>
+                                        <h4>Arrastra tu archivo de audio aquí</h4>
+                                        <p>o haz clic para seleccionar</p>
+                                        <button class="btn-primary" id="select-audio-btn">Seleccionar Archivo</button>
+                                    </div>
+                                    <input type="file" id="quick-audio-file" accept="audio/*" hidden>
+                                </div>
+
+                                <div class="supported-formats">
+                                    <span>Formatos soportados:</span>
+                                    <div class="format-tags">
+                                        <span class="format-tag">MP3</span>
+                                        <span class="format-tag">WAV</span>
+                                        <span class="format-tag">FLAC</span>
+                                        <span class="format-tag">M4A</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Recommendations -->
+                        <div class="dashboard-card recommendations-card">
+                            <div class="card-header">
+                                <h3>Recomendado para Ti</h3>
+                                <button class="refresh-btn" id="refresh-recommendations">
+                                    <i class="fas fa-sync-alt"></i>
+                                </button>
+                            </div>
+                            <div class="recommendations-container" id="dashboard-recommendations">
+                                <div class="recommendations-empty">
+                                    <i class="fas fa-star"></i>
+                                    <p>Las recomendaciones se basarán en tu actividad</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Community Spotlight -->
+                        <div class="dashboard-card community-card">
+                            <div class="card-header">
+                                <h3>Destacado de la Comunidad</h3>
+                                <button class="view-all-btn" id="explore-community-btn">Explorar</button>
+                            </div>
+                            <div class="community-spotlight" id="community-spotlight">
+                                <div class="community-empty">
+                                    <i class="fas fa-users"></i>
+                                    <p>Descubre proyectos de la comunidad</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Other Sections (initially empty, loaded on demand) -->
+                <section id="transcribe-section" class="content-section"></section>
+                <section id="library-section" class="content-section"></section>
+                <section id="community-section" class="content-section"></section>
+                <section id="projects-section" class="content-section"></section>
+                <section id="trending-section" class="content-section"></section>
+            </div>
+        </main>
+
+        <!-- Audio Player -->
+        <footer class="audio-player" id="audio-player">
+            <div class="player-container">
+                <div class="track-info">
+                    <div class="track-cover">
+                        <i class="fas fa-music"></i>
+                    </div>
+                    <div class="track-details">
+                        <div class="track-title">TransCoope Player</div>
+                        <div class="track-artist">Selecciona un audio para reproducir</div>
+                    </div>
+                    <button class="like-btn">
+                        <i class="far fa-heart"></i>
+                    </button>
+                </div>
+
+                <div class="player-controls">
+                    <div class="control-buttons">
+                        <button class="control-btn" title="Shuffle">
+                            <i class="fas fa-random"></i>
+                        </button>
+                        <button class="control-btn" title="Previous">
+                            <i class="fas fa-step-backward"></i>
+                        </button>
+                        <button class="play-btn" title="Play">
+                            <i class="fas fa-play"></i>
+                        </button>
+                        <button class="control-btn" title="Next">
+                            <i class="fas fa-step-forward"></i>
+                        </button>
+                        <button class="control-btn" title="Repeat">
+                            <i class="fas fa-redo"></i>
+                        </button>
+                    </div>
+                    <div class="progress-container">
+                        <span class="time-current">0:00</span>
+                        <div class="progress-bar">
+                            <div class="progress-fill"></div>
+                        </div>
+                        <span class="time-total">0:00</span>
+                    </div>
+                </div>
+
+                <div class="player-options">
+                    <button class="option-btn" title="Queue">
+                        <i class="fas fa-list"></i>
+                    </button>
+                    <button class="option-btn" title="Volume">
+                        <i class="fas fa-volume-up"></i>
+                    </button>
+                    <div class="volume-control">
+                        <div class="volume-slider">
+                            <div class="volume-fill"></div>
+                        </div>
+                    </div>
+                    <button class="option-btn" title="Fullscreen">
+                        <i class="fas fa-expand"></i>
+                    </button>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <!-- Modals -->
+    <div id="modal-overlay" class="modal-overlay"></div>
+
+    <!-- Quick Start Modal -->
+    <div id="quick-start-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Comienza con TransCoope</h3>
+                <button class="modal-close">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="welcome-steps">
+                    <div class="welcome-step active">
+                        <div class="step-icon">
+                            <i class="fas fa-user"></i>
+                        </div>
+                        <h4>Configura tu perfil</h4>
+                        <p>Personaliza tu experiencia musical</p>
+                        <button class="btn-primary" id="setup-profile-btn">Configurar Perfil</button>
+                    </div>
+                    <div class="welcome-step">
+                        <div class="step-icon">
+                            <i class="fas fa-music"></i>
+                        </div>
+                        <h4>Transcribe tu primera canción</h4>
+                        <p>Convierte audio en partituras al instante</p>
+                        <button class="btn-primary" id="first-transcription-btn">Comenzar</button>
+                    </div>
+                    <div class="welcome-step">
+                        <div class="step-icon">
+                            <i class="fas fa-users"></i>
+                        </div>
+                        <h4>Únete a la comunidad</h4>
+                        <p>Conecta con otros músicos</p>
+                        <button class="btn-primary" id="join-community-btn">Explorar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Notification Center -->
+    <div id="notification-center" class="notification-center">
+        <div class="notification-header">
+            <h3>Notificaciones</h3>
+            <div class="notification-actions">
+                <button class="mark-all-read">Marcar todo como leído</button>
+                <button class="notification-close">&times;</button>
+            </div>
+        </div>
+        <div class="notification-list" id="notification-list">
+            <!-- Notifications loaded dynamically -->
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/howler/2.2.3/howler.min.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>
